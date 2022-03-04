@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse 
 from django.contrib.auth import authenticate, login
 
 from .forms import LoginForm, UserRegistrationForm
-
+from .models import Post, Comment
 #ffrom  .models import User 
 # Create your views here.
 
@@ -43,6 +43,27 @@ def register(request):
     return render(request, 'bigblog/register.html', {'user_form': user_form})
 
 
+def post_list(request):
+	posts = Post.objects.all()
+	return render(request, "bigblog/post/list.html", {"posts": posts})
+
+
+# def post_detail(request, year):
+#     post = get_object_or_404(Post, publish__year = year)
+#     return render(request,'blog/post/detail.html', {'post': post})
+
+
+
+def post_detail(request, year, month, day, post):
+    post = get_object_or_404(Post, slug=post,
+                                   status='published',
+                                   publish__year=year,
+                                   publish__month=month,
+                                   publish__day=day)
+    return render(request, "bigblog/post/detail.html", {'post':post})
+
+
+#     return render(request,'blog/post/detail.html', {'post': post})
 # def just(request):
 #     object_list = User.objects.all()
 #     return render(request, 'bigblog/third_page.html', {'object_list': object_list})
