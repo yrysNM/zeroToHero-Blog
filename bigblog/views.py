@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse 
 from django.contrib.auth import authenticate, login
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import LoginForm, UserRegistrationForm
 from .models import Post, Comment
 #ffrom  .models import User 
@@ -44,13 +44,19 @@ def register(request):
 
 
 def post_list(request):
-	posts = Post.objects.all()
-	return render(request, "bigblog/post/list.html", {"posts": posts})
+    object_list = Post.objects.all()
+    paginator = Paginator(object_list, 3)      # 3 posts in each num_pages 
 
-
-# def post_detail(request, year):
-#     post = get_object_or_404(Post, publish__year = year)
-#     return render(request,'blog/post/detail.html', {'post': post})
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        #if page is not a integer deliver the first page
+        posts = paginator.page(1)
+    except EmptyPage:
+        #if page is out of range deliver last page of results
+        posts = paginator.page(paginator.num_pages)
+    return render(request, "bigblog/post/list.html", {"page": page, 'posts': posts})
 
 
 
@@ -61,19 +67,3 @@ def post_detail(request, year, month, day, post):
                                    publish__month=month,
                                    publish__day=day)
     return render(request, "bigblog/post/detail.html", {'post':post})
-
-
-#     return render(request,'blog/post/detail.html', {'post': post})
-# def just(request):
-#     object_list = User.objects.all()
-#     return render(request, 'bigblog/third_page.html', {'object_list': object_list})
-
-# def thanks_page(request):
-#     name = request.POST.get('name',  False)
-#     email = request.POST.get('email', False)
-#     password = request.POST.get('password', False)
-#     element = User(name=name, email=email, password=password)
-#     element.save()
-#     return render(request, 'bigblog/thanks.html', {'name': name,
-#                                              'email': email,
-#                                              'password': password})
