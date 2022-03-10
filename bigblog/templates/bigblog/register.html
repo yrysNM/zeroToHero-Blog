@@ -2,10 +2,19 @@
 
 {% block title %}Create an account{% endblock %}
 
+{%block header%}
+	<li><a href = "#">sign up</a></li>
+	<li><a href = "{% url 'bigblog:user_login'%} ">sign in </a></li>
+
+{%endblock%}
+
+
 {% block content %}
-    <h1>Create an account</h1>
-    <p>Please, sign up using the following form:</p>
-    <form action="." method="post">
+    <h1>Create  an account</h1>
+    
+    
+    <p class= "headTxt">Please, sign up using the following form:</p>
+    <form action="." method="post" class = "post-form">
         {{ user_form.as_p }}
         {% csrf_token %}
         <p><input type="submit" value="Create my account"></p>

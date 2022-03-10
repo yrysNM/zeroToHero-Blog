@@ -3,15 +3,29 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
-    <link href="{% static "css/base.css" %}" rel="stylesheet">
+    <link href="{% static 'scss/build/css/base.css' %}" rel="stylesheet">
 </head>
 <body>
-<div id="header">
-    <span class="logo">🐱‍💻</span>
-</div>
-<div id="content">
-    {% block content %}
-    {% endblock %}
-</div>
+<header>
+	<div class = "heighHeader">	
+		<div id="header">
+		    <span class="logo">
+		    	<div class = "size"></div>
+		    </span>
+		    	<h1><a href = "{%url 'bigblog:post_list'%}">ZeroToHero</a></h1>
+		</div>
+
+		<nav>
+			<ul>
+				{%block header%}{%endblock%}
+			</ul>
+		</nav>
+	</div>
+</header>
+
+	<div id="content">
+	    {% block content %}
+	    {% endblock %}
+	</div>
 </body>
 </html>

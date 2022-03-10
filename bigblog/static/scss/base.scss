@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+html {
+	overflow-x: hidden;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+
+body{
+    margin: 0;
+    /* font-size: 23px; */
+    /* line-height: 1.5; */
+    color: #161c2d;
+    /* -webkit-font-smoothing: antialiased; */
+    background: #fff url(https://brainscloud.ru/themes/bc-2020/assets/images/bg2.svg) top left no-repeat;
+    display: block;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+
+}
+
+
+header{
+    width: 100%;
+    /* position: fixed; */
+    /* top: 0;
+    right: 0;
+    left: 0; */
+    z-index: 1050;
+    transition: transform .4s ease-in-out, -webkit-transform .4s ease-in-out;
+    display: block;
+    .heighHeader {    
+        height: 80px;
+        box-shadow: 2px 3px 15px #000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        #header {
+            display: flex;
+            padding-left: 1.5rem;
+        	.logo 
+        	{
+        		background-image: url("../../../images/meta.png");
+        		background-size: cover; 
+        		background-position: center center; 
+        		background-repeat: no-repeat;
+        		display:inline-block;
+        		width: auto; 
+        		min-height: auto; 
+
+        		.size{
+        			width: 54px;
+        			min-height: 44px;
+        		}
+
+        	}
+            h1 
+            {
+                padding-left: 20px;
+                font-size: 1.2rem;
+                font-weight: 200;
+                font-family: "Loto", sans-serif;
+                a
+                {
+                    text-transform: none; 
+                    text-decoration: none; 
+                    color: #000;
+                }
+            }
+        }
+
+        nav {
+            ul {
+                list-style: none;
+                display: flex;
+                flex-direction: row; 
+                li, a
+                {
+                    text-decoration: none; 
+                    text-transform: none;
+                    color: #2f55d4;
+
+                }
+                a
+                {
+                    margin-right: 10px;
+                    padding: 10px 30px;
+                    text-transform: uppercase;
+                    border: 1px solid #2f55d4;
+                    &:hover 
+                    {
+                        background-color: #2f55d4;
+                        transition: all 0.35s ease;
+                        color: #fff;
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+#content 
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 
+    {
+        text-transform: uppercase;
+    }
+
+    .headTxt
+    {
+        font-style: italic;
+    }
+
+    .post-form  {
+        display: flex;
+        flex-direction: column; 
+        flex-wrap: wrap;
+        justify-content: center; 
+        align-items: center;
+        text-align:center;
+        input
+        {
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            width: 250px;
+            margin: 0 auto;
+            background-color: rgba(204, 204, 204, 0.5);
+            border: none;
+            height: 30px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+             appearance: none;
+           // margin-right: -50%;
+
+            &:focus 
+            {
+                outline: none;
+            }
+        }
+
+        input[type = 'submit'] {
+        
+            justify-content: center;
+            padding: 20px 0;
+            border: 1px solid #2f55d4;
+            background-color: transparent; 
+
+            &:hover 
+            {
+                background-color: #2f55d4;
+                transition: all 0.35s ease;
+                color: #fff;
+            }
+        }
+
+        span 
+        {
+            opacity: 0.7
+        }
+    }
+}
