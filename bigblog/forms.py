@@ -24,3 +24,4 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 
+ 

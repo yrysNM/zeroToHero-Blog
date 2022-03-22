@@ -3,9 +3,19 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import LoginForm, UserRegistrationForm
+from django.views.generic import ListView
+
 from .models import Post, Comment
 #ffrom  .models import User 
 # Create your views here.
+
+
+# class PostListView(ListView): 
+#     queryset = Post.objects.all()
+#     context_object_name  = "posts"
+#     paginate_by = 3
+#     template_name = "bigblog/post/list.html"
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -25,7 +35,7 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'bigblog/login.html', {'form': form})
 
-
+ 
 
 def register(request):
     if request.method == 'POST':
@@ -67,3 +77,5 @@ def post_detail(request, year, month, day, post):
                                    publish__month=month,
                                    publish__day=day)
     return render(request, "bigblog/post/detail.html", {'post':post})
+
+

@@ -19,7 +19,7 @@
         {{ post.body|truncatewords:30|linebreaks }}
     {% endfor %}
 
-    {%include 'bigblog/post/pagination.html' with page=posts %}
+    {% include 'bigblog/post/pagination.html' with page=posts %}
 {% endblock %}
 
 

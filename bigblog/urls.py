@@ -6,7 +6,8 @@ urlpatterns = [
 	#post views
 	path('user_login/', views.user_login, name = "user_login"),
 	path('user_register/', views.register, name = "register"),
-	path('', views.post_list, name = "post_list"),
+	path('blog/', views.post_list, name = "post_list"),
+	#path('blog/', views.PostListView.as_view(), name = "post_list"),
 	re_path(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/'\
         r'(?P<post>[-\w]+)/$',
         views.post_detail,
