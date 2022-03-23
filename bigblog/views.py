@@ -2,13 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse 
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import LoginForm, UserRegistrationForm
 from django.views.generic import ListView
+from django.core.mail import send_mail
 
+from .forms import LoginForm, UserRegistrationForm, EmailPostForm
 from .models import Post, Comment
-#ffrom  .models import User 
-# Create your views here.
 
+
+
+# Create your views here.
 
 # class PostListView(ListView): 
 #     queryset = Post.objects.all()
@@ -79,3 +81,27 @@ def post_detail(request, year, month, day, post):
     return render(request, "bigblog/post/detail.html", {'post':post})
 
 
+def post_share(request, post_id):
+    #Retreive post by id
+    post = get_object_or_404(Post, id = post_id, status = "published")
+    send = False
+    if request.method == "POST":
+        #Form was submitted 
+        form = EmailPostForm(request.POST)
+        if form.is_valid():
+            #Form fields passed validation
+            cd = form.cleaned_data
+            post_url= request.build_absolute_url(post.get_absolute_url())
+            subject = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post.title)
+            message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(post.title, post_url, cd['name'], cd['comments'])
+            send_mail(subject, message, "yrysbek.or.s@gmail.com", [cd['to']])
+            send = True
+           # ... send email
+
+    else: 
+        form = EmailPostForm()
+
+    return render(request, "bigblog/post/share.html", {
+                            "post": post, 
+                            "form": form,
+                            'sent': sent})
