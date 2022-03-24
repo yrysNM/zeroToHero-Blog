@@ -4,8 +4,10 @@ from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
+from django.shortcuts import redirect
+from django.utils import timezone
 
-from .forms import LoginForm, UserRegistrationForm, EmailPostForm
+from .forms import LoginForm, UserRegistrationForm, EmailPostForm, PostForm
 from .models import Post, Comment
 
 
@@ -28,7 +30,8 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponse('Authenticated successfully')
+                   # return render(request, "bigblog/login.html", {"form": form});
+                    return post_list(request);
                 else:
                     return HttpResponse('Disabled account')
             else:
@@ -84,14 +87,14 @@ def post_detail(request, year, month, day, post):
 def post_share(request, post_id):
     #Retreive post by id
     post = get_object_or_404(Post, id = post_id, status = "published")
-    send = False
+    sent = False
     if request.method == "POST":
         #Form was submitted 
         form = EmailPostForm(request.POST)
         if form.is_valid():
             #Form fields passed validation
             cd = form.cleaned_data
-            post_url= request.build_absolute_url(post.get_absolute_url())
+            post_url = request.build_absolute_uri(post.get_absolute_url())
             subject = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post.title)
             message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(post.title, post_url, cd['name'], cd['comments'])
             send_mail(subject, message, "yrysbek.or.s@gmail.com", [cd['to']])
@@ -105,3 +108,22 @@ def post_share(request, post_id):
                             "post": post, 
                             "form": form,
                             'sent': sent})
+
+
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk = pk)
+
+    if(request.method == 'POST'):
+        form = PostForm(request.POST, instance = post)
+
+        if(form.is_valid()):
+            post = form.save(commit = False)
+            post.author = request.user
+            date = timezone.now()
+            post.save()
+            return render(request, "bigblog/post/detail.html", {"post": post})
+          #  return redirect("bigblog:post_detail", psot = post)
+    else:
+        form = PostForm(instance = post)
+
+    return render(request, "bigblog/post/post_edit.html", {"form": form});
