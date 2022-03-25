@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.utils import timezone
 
-from .forms import LoginForm, UserRegistrationForm, EmailPostForm, PostForm
+from .forms import LoginForm, UserRegistrationForm, EmailPostForm, PostForm, CommentForm
 from .models import Post, Comment
 
 
@@ -81,7 +81,28 @@ def post_detail(request, year, month, day, post):
                                    publish__year=year,
                                    publish__month=month,
                                    publish__day=day)
-    return render(request, "bigblog/post/detail.html", {'post':post})
+
+    #List of active comments for this post
+    comments = post.comments.filter(active = True)
+
+    if(request.method == "POST"):
+        #A comment was posted
+        comment_form = CommentForm(data=request.POST)
+
+        if comment_form.is_valid():
+            #Create Comment object but don't save to databave yet
+            new_comment = comment_form.save(commit = False)
+            #Assign the current post to the comment
+            new_comment.post = post
+            #Save the comment to database
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+
+    return render(request, "bigblog/post/detail.html", 
+                            {'post':post, 
+                              'comments': comments,
+                              'comment_form': comment_form})
 
 
 def post_share(request, post_id):
@@ -122,8 +143,26 @@ def post_edit(request, pk):
             date = timezone.now()
             post.save()
             return render(request, "bigblog/post/detail.html", {"post": post})
-          #  return redirect("bigblog:post_detail", psot = post)
+            #return redirect("bigblog:post_detail", post = post.get_absolute_url)
     else:
         form = PostForm(instance = post)
 
     return render(request, "bigblog/post/post_edit.html", {"form": form});
+
+
+
+def post_new(request):
+    if(request.method == "POST"):
+        form = PostForm(request.POST)
+
+        if(form.is_valid()):
+            post = form.save(commit = False)
+            post.author = request.user
+           # post.slug = request.title 
+            post.save()
+            #return redirect('bigblog:post_detail', post.get_absolute_url) 
+            return render(request, "bigblog/post/detail.html", {"post": post})
+    else:
+        form = PostForm()
+    
+    return render(request, "bigblog/post/post_edit.html", {"form": form});   

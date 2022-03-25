@@ -11,13 +11,53 @@
 
     {% endif%}
 
+
     <a href = "{% url 'bigblog:post_list' %}">Back</a>
+
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
 
-        {% if user.is_authenticated%}
+
+    {{ post.body|linebreaks }}
+
+
+
+    <!-- DJANGO ORM -->
+    {% with comments.count as total_comments %}
+        <h2>
+            <!-- а pluralize используется для отображения суффикса -->
+            {{total_comments}} comment {{total_comments|pluralize}}
+        </h2>
+    {%endwith%}
+
+    {% for comment in comments %}
+        <div class = "comment">
+            <p class = "info">
+                Comment {{ forloop.counter }} by {{ comment.name }} 
+                {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks }}
+        </div>
+        {% empty %}
+        <p>There are no comments yet.</p>
+    {% endfor %}
+
+    {% if new_comment %}
+        <h2>Your comment has been added.</h2>
+
+    {% else %}
+        <h2>Add a new comment</h2>
+        <form action = "." method = "POST">
+            {{comment_form.as_p}}
+
+            {%csrf_token%}
+
+            <p><input type= "submit" value = "Add comment" /> </p>
+        </form>
+    {% endif %}
+ <!--        {% if user.is_authenticated%}
 
             <form method = "POST">
                 {% csrf_token %}
@@ -26,10 +66,11 @@
                 
             </form>
             
-        {% endif %}
+        {% endif %} -->
 
-{{ post.body|linebreaks }}
+
     <p>
         <a href = "{% url 'bigblog:post_share' post.id %}">Share this post</a>
     </p>
+
 {% endblock %}
